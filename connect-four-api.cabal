@@ -1,0 +1,85 @@
+name:                connect-four-api
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/battermann/connect-four
+license:             MIT
+license-file:        LICENSE
+author:              Leif Battermann
+maintainer:          leifbattermann@gmail.com
+copyright:           2019 Leif Battermann
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Api
+                     , Connect4.Board
+                     , Connect4.Types
+                     , Connect4.Events
+  ghc-options:         -W
+                       -Wall
+                       -fwarn-tabs
+                       -fwarn-unused-imports
+                       -fwarn-name-shadowing
+                       -fwarn-incomplete-uni-patterns
+                       -fwarn-incomplete-patterns
+                       -fwarn-overlapping-patterns
+                       -fwarn-incomplete-record-updates
+                       -fwarn-missing-signatures
+  build-depends:       base >= 4.7 && < 5
+                     , aeson
+                     , servant-server
+                     , wai
+                     , wai-cors
+                     , warp
+                     , uuid
+                     , transformers
+                     , mtl
+                     , containers
+                     , either
+                     , bytestring
+                     , array
+                     , aeson-pretty
+                     , hasql
+                     , hasql-transaction
+                     , ilist
+                     , vector
+                     , contravariant-extras
+                     , text
+  default-language:    Haskell2010
+  other-modules:     Connect4.Commands
+                     , Connect4.GameState
+                     , Connect4.InMemoryEventStore
+                     , Connect4.PostgresEventStore
+                     , EventSourcing.EventStore
+                     , Requests
+
+executable connect-four-api-exe
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -fwarn-unused-binds -fwarn-unused-imports -W -Wall -fwarn-incomplete-patterns
+  build-depends:       base
+                     , connect-four-api
+                     , text
+  default-language:    Haskell2010
+
+test-suite connect-four-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , connect-four-api
+                     , hspec
+                     , hspec-wai
+                     , hspec-wai-json
+                     , aeson
+                     , uuid
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010  
+
+source-repository head
+  type:     git
+  location: https://github.com/battermann/connect-four
