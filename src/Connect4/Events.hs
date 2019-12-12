@@ -29,16 +29,15 @@ instance Show Event where
 
 apply :: Event -> GameState -> GameState
 apply event game = case (event, game) of
-  (GameCreated _ p c, Uninitialized) -> AwaitOpponent p c
-  (GameJoined _ p1, AwaitOpponent p2 c) ->
-    case c of
-      -- yellow always plays first
-      Yellow -> YellowToPlay p1 p2 empty
-      Red -> YellowToPlay p2 p1 empty
-  (YellowPlayed _ col, YellowToPlay y r b) ->
-    RedToPlay y r (play col b)
-  (RedPlayed _ col, RedToPlay y r b) ->
-    YellowToPlay y r (play col b)
+  (GameCreated _ player color, Uninitialized) -> AwaitOpponent player color
+  (GameJoined _ player1, AwaitOpponent player2 color) ->
+    case color of
+      Yellow -> YellowToPlay player1 player2 empty
+      Red -> YellowToPlay player2 player1 empty
+  (YellowPlayed _ column, YellowToPlay yellow red board) ->
+    RedToPlay yellow red (play column board)
+  (RedPlayed _ column, RedToPlay yellow red board) ->
+    YellowToPlay yellow red (play column board)
   (GameWon _ _, _) -> GameOver
   (GameTied _, _) -> GameOver
   _ -> game

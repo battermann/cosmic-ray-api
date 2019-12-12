@@ -14,32 +14,38 @@ data Command
   | JoinGame ClientId
   | Play ClientId Column
 
+ok :: a -> Either b a
+ok = Right
+
+err :: b -> Either b a
+err = Left
+
 decide :: StreamId -> Command -> GameState -> Either Error [Event]
 decide streamId cmd state = case (cmd, state) of
-  (CreateNewGame p c, Uninitialized) -> Right [GameCreated streamId p c]
-  (CreateNewGame _ _, _) -> Left StreamAlreadyExists
-  (JoinGame p1, AwaitOpponent p2 _) ->
-    if p1 /= p2
-      then Right [GameJoined streamId p1]
-      else Left JoinGameNotPossible
-  (Play p col, RedToPlay r _ b) ->
-    if p == r
-      then case evalMove col b of
-        Won -> Right [RedPlayed streamId col, GameWon streamId p]
-        Tied -> Right [RedPlayed streamId col, GameTied streamId]
-        InProgress -> Right [RedPlayed streamId col]
-        Invalid -> Left IllegalMove
-      else Left WrongPlayer
-  (Play p col, YellowToPlay _ y b) ->
-    if p == y
-      then case evalMove col b of
-        Won -> Right [YellowPlayed streamId col, GameWon streamId p]
-        Tied -> Right [YellowPlayed streamId col, GameTied streamId]
-        InProgress -> Right [YellowPlayed streamId col]
-        Invalid -> Left IllegalMove
-      else Left WrongPlayer
-  (Play _ _, _) -> Left PlayNotPossible
-  (JoinGame _, _) -> Left JoinGameNotPossible
+  (CreateNewGame player color, Uninitialized) -> ok [GameCreated streamId player color]
+  (CreateNewGame _ _, _) -> err StreamAlreadyExists
+  (JoinGame player1, AwaitOpponent player2 _) ->
+    if player1 /= player2
+      then ok [GameJoined streamId player1]
+      else err JoinGameNotPossible
+  (Play player column, RedToPlay red _ board) ->
+    if player == red
+      then case evalMove column board of
+        Won -> ok [RedPlayed streamId column, GameWon streamId player]
+        Tied -> ok [RedPlayed streamId column, GameTied streamId]
+        InProgress -> ok [RedPlayed streamId column]
+        Invalid -> err IllegalMove
+      else err WrongPlayer
+  (Play player column, YellowToPlay _ yellow board) ->
+    if player == yellow
+      then case evalMove column board of
+        Won -> ok [YellowPlayed streamId column, GameWon streamId player]
+        Tied -> ok [YellowPlayed streamId column, GameTied streamId]
+        InProgress -> ok [YellowPlayed streamId column]
+        Invalid -> err IllegalMove
+      else err WrongPlayer
+  (Play _ _, _) -> err PlayNotPossible
+  (JoinGame _, _) -> err JoinGameNotPossible
 
 data MoveResult = Won | Tied | InProgress | Invalid
 

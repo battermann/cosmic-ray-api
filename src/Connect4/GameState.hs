@@ -5,7 +5,7 @@ import Connect4.Types
 
 data GameState
   = Uninitialized
-  | AwaitOpponent {player :: ClientId, color :: Color}
-  | YellowToPlay {yellow :: ClientId, red :: ClientId, board :: Board}
-  | RedToPlay {yellow :: ClientId, red :: ClientId, board :: Board}
+  | AwaitOpponent ClientId Color
+  | YellowToPlay ClientId ClientId Board
+  | RedToPlay ClientId ClientId Board
   | GameOver
