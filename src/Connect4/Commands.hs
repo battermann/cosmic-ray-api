@@ -14,12 +14,6 @@ data Command
   | JoinGame ClientId
   | Play ClientId Column
 
-ok :: a -> Either b a
-ok = Right
-
-err :: b -> Either b a
-err = Left
-
 decide :: StreamId -> Command -> GameState -> Either Error [Event]
 decide streamId cmd state = case (cmd, state) of
   (CreateNewGame player color, Uninitialized) -> ok [GameCreated streamId player color]
@@ -61,3 +55,9 @@ evalMove col b =
                 then Tied
                 else InProgress
     else Invalid
+
+ok :: a -> Either b a
+ok = Right
+
+err :: b -> Either b a
+err = Left
