@@ -1,6 +1,7 @@
 FROM haskell:8.6.5
-RUN mkdir -p /opt/build
-COPY ./connect-four-api/ /opt/build/
-WORKDIR /opt/build
+RUN apt update && apt upgrade -y && apt install -y postgresql postgresql-contrib libpq-dev
+RUN mkdir -p /app
+COPY . /app
+WORKDIR /app
 RUN stack build
 CMD stack exec connect-four-api-exe
