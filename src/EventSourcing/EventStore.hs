@@ -9,7 +9,6 @@ where
 
 import Control.Monad.Except
 import Data.Aeson
-import Debug.Trace as Debug
 import GHC.Generics
 
 newtype Version = Version Int
@@ -40,7 +39,6 @@ handleCommand ::
   ExceptT error f ()
 handleCommand eventStore decide apply initial streamId cmd = do
   events <- readFromStream eventStore streamId
-  let _ = Debug.trace "" events
   let (state, version) = replay apply initial events
   newEvents <- liftEither (decide streamId cmd state)
   appendToStream eventStore streamId version newEvents
