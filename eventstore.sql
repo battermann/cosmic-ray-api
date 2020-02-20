@@ -3,6 +3,7 @@ CREATE TABLE streams(
 );
 
 CREATE TABLE events(
+    id SERIAL,
     stream_id uuid NOT NULL REFERENCES streams (stream_id),
     version integer NOT NULL DEFAULT 0,
     time_stamp timestamp NOT NULL DEFAULT now(),
