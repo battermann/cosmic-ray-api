@@ -56,6 +56,7 @@ library
                      , Connect4.PostgresEventStore
                      , EventSourcing.EventStore
                      , Requests
+                     , Responses
 
 executable connect-four-api-exe
   hs-source-dirs:      app

@@ -25,9 +25,10 @@ import Network.Wai.Handler.Warp
 import Network.Wai.Middleware.Cors
 import Requests
 import Servant
+import qualified Responses
 
 type API =
-  "games" :> ReqBody '[JSON] NewGame :> Post '[JSON] NoContent
+  "games" :> ReqBody '[JSON] NewGame :> PostCreated '[JSON] Responses.GameCreated
     :<|> "games" :> Capture "gameId" UUID :> "join" :> ReqBody '[JSON] JoinGame :> Post '[JSON] NoContent
     :<|> "games" :> Capture "gameId" UUID :> "play" :> ReqBody '[JSON] Play :> Post '[JSON] NoContent
 
@@ -71,12 +72,12 @@ server handler =
     :<|> joinGame
     :<|> play
   where
-    newGame :: NewGame -> Handler NoContent
+    newGame :: NewGame -> Handler Responses.GameCreated
     newGame req = do
-      (StreamId uuid) <- liftIO $ StreamId <$> UUID.nextRandom
+      streamId <- liftIO $ StreamId <$> UUID.nextRandom
       let cmd = Cmd.CreateNewGame (clientId (req :: NewGame)) (color (req :: NewGame))
-      Handler $ withExceptT toServerError $ handler (StreamId uuid) cmd
-      return NoContent
+      Handler $ withExceptT toServerError $ handler streamId cmd
+      return $ Responses.GameCreated streamId
     joinGame :: UUID -> JoinGame -> Handler NoContent
     joinGame uuid req = do
       let cmd = Cmd.JoinGame (clientId (req :: JoinGame))
