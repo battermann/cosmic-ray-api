@@ -4,16 +4,16 @@ module Connect4.InMemoryEventStore
   )
 where
 
-import Connect4.Events (Event)
-import Connect4.Types
-import Control.Monad.IO.Class
-import Control.Monad.Trans.Except
-import Data.Functor
-import Data.IORef
-import Data.List.Index (imap)
-import Data.Map.Strict as Map (Map, empty, insert, lookup)
-import Data.Maybe
-import EventSourcing.EventStore
+import           Connect4.Events            (Event)
+import           Connect4.Types
+import           Control.Monad.IO.Class
+import           Control.Monad.Trans.Except
+import           Data.Functor
+import           Data.IORef
+import           Data.List.Index            (imap)
+import           Data.Map.Strict            as Map (Map, empty, insert, lookup)
+import           Data.Maybe
+import           EventSourcing.EventStore
 
 type IOResult a = ExceptT Error IO a
 

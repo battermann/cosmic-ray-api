@@ -2,14 +2,13 @@
 
 module Connect4.Types where
 
-import Data.Aeson
-import Data.UUID
-import GHC.Generics
+import           Data.Aeson
+import           Data.UUID
+import           GHC.Generics
 
-data Color
-  = Yellow
-  | Red
-  deriving (Eq, Show, Generic)
+data Color = Yellow
+    | Red
+    deriving (Eq, Show, Generic)
 
 instance FromJSON Color
 
@@ -33,13 +32,12 @@ instance FromJSON Column
 
 instance ToJSON Column
 
-data Error
-  = StreamNotFound
-  | ConcurrentWriteError
-  | StreamAlreadyExists
-  | JoinGameNotPossible
-  | WrongPlayer
-  | IllegalMove
-  | PlayNotPossible
-  | DbQueryError String
-  deriving (Eq, Show)
+data Error = StreamNotFound
+    | ConcurrentWriteError
+    | StreamAlreadyExists
+    | JoinGameNotPossible
+    | WrongPlayer
+    | IllegalMove
+    | PlayNotPossible
+    | DbQueryError String
+    deriving (Eq, Show)

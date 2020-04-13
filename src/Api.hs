@@ -1,31 +1,31 @@
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DataKinds             #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TypeOperators         #-}
 
 module Api
   ( startApp,
   )
 where
 
-import Connect4.Commands as Cmd (Command (..), decide)
-import Connect4.Events
-import Connect4.GameState (GameState (Uninitialized))
-import Connect4.PostgresEventStore
-import Connect4.Types
-import Control.Monad.Except
-import qualified Data.ByteString.Char8 as C
+import           Connect4.Commands             as Cmd (Command (..), decide)
+import           Connect4.Events
+import           Connect4.GameState            (GameState (Uninitialized))
+import           Connect4.PostgresEventStore
+import           Connect4.Types
+import           Control.Monad.Except
+import qualified Data.ByteString.Char8         as C
 import qualified Data.ByteString.Lazy.Internal as BL
-import Data.UUID
-import qualified Data.UUID.V4 as UUID
-import EventSourcing.EventStore
-import qualified Hasql.Connection as Connection
-import Network.Wai
-import Network.Wai.Handler.Warp
-import Network.Wai.Middleware.Cors
-import Requests
-import Servant
+import           Data.UUID
+import qualified Data.UUID.V4                  as UUID
+import           EventSourcing.EventStore
+import qualified Hasql.Connection              as Connection
+import           Network.Wai
+import           Network.Wai.Handler.Warp
+import           Network.Wai.Middleware.Cors
+import           Requests
 import qualified Responses
+import           Servant
 
 type API =
   "games" :> ReqBody '[JSON] NewGame :> PostCreated '[JSON] Responses.GameCreated

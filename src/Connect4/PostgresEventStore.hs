@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Connect4.PostgresEventStore
@@ -7,27 +7,27 @@ module Connect4.PostgresEventStore
   )
 where
 
-import Connect4.Events (Event)
-import Connect4.Types
-import Contravariant.Extras.Contrazip
-import Control.Monad
-import Control.Monad.Trans.Except
-import Data.Aeson
-import qualified Data.ByteString.Lazy as BL
-import Data.Either.Combinators
-import Data.Functor
-import Data.Functor.Contravariant
-import Data.List.Index as L (imap)
-import Data.Vector as Vector
-import EventSourcing.EventStore
-import GHC.Generics
-import qualified Hasql.Connection as Connection
-import qualified Hasql.Decoders as D
-import qualified Hasql.Encoders as E
-import Hasql.Session as Session hiding (sql)
-import Hasql.Statement (Statement (..))
-import qualified Hasql.Transaction as Tx
-import Hasql.Transaction.Sessions
+import           Connect4.Events                (Event)
+import           Connect4.Types
+import           Contravariant.Extras.Contrazip
+import           Control.Monad
+import           Control.Monad.Trans.Except
+import           Data.Aeson
+import qualified Data.ByteString.Lazy           as BL
+import           Data.Either.Combinators
+import           Data.Functor
+import           Data.Functor.Contravariant
+import           Data.List.Index                as L (imap)
+import           Data.Vector                    as Vector
+import           EventSourcing.EventStore
+import           GHC.Generics
+import qualified Hasql.Connection               as Connection
+import qualified Hasql.Decoders                 as D
+import qualified Hasql.Encoders                 as E
+import           Hasql.Session                  as Session hiding (sql)
+import           Hasql.Statement                (Statement (..))
+import qualified Hasql.Transaction              as Tx
+import           Hasql.Transaction.Sessions
 
 type IOResult a = ExceptT Error IO a
 
@@ -101,7 +101,7 @@ appendEventsStatement = Statement sql encoder decoder True
     decoder = D.noResult
 
 data VersionedEvent = VersionedEvent Version Event
-  deriving (Eq, Show, Generic)
+    deriving (Eq, Show, Generic)
 
 instance ToJSON VersionedEvent
 

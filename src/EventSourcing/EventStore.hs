@@ -7,20 +7,19 @@ module EventSourcing.EventStore
   )
 where
 
-import Control.Monad.Except
-import Data.Aeson
-import GHC.Generics
+import           Control.Monad.Except
+import           Data.Aeson
+import           GHC.Generics
 
 newtype Version = Version Int
   deriving (Eq, Show, Generic)
 
 instance ToJSON Version
 
-data EventStore f streamId error event
-  = EventStore
-      { appendToStream :: streamId -> Version -> [event] -> ExceptT error f (),
-        readFromStream :: streamId -> ExceptT error f [(event, Version)]
-      }
+data EventStore f streamId error event = EventStore
+    { appendToStream :: streamId -> Version -> [event] -> ExceptT error f ()
+    , readFromStream :: streamId -> ExceptT error f [(event, Version)]
+    }
 
 replay :: (event -> state -> state) -> state -> [(event, Version)] -> (state, Version)
 replay apply game =

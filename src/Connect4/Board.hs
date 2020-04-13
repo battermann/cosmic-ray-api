@@ -9,22 +9,21 @@ module Connect4.Board
   )
 where
 
-import Connect4.Types
-import Data.Array.Unboxed
-import Data.Bits
-import Data.Word
+import           Connect4.Types
+import           Data.Array.Unboxed
+import           Data.Bits
+import           Data.Word
 
 width, height :: Int
 (width, height) = (7, 6)
 
-data Board
-  = Board
-      { numMoves :: Int,
-        toMove :: Word64,
-        nextToMove :: Word64,
-        heights :: UArray Int Int
-      }
-  deriving (Eq, Show)
+data Board = Board
+    { numMoves   :: Int
+    , toMove     :: Word64
+    , nextToMove :: Word64
+    , heights    :: UArray Int Int
+    }
+    deriving (Eq, Show)
 
 empty :: Board
 empty = Board
