@@ -9,14 +9,15 @@ import           Connect4.Types
 import           Data.Aeson
 import           Data.Aeson.Encode.Pretty
 import qualified Data.ByteString.Lazy.Internal as BL (unpackChars)
+import           Data.Time.Clock               (UTCTime)
 import           GHC.Generics
 
-data Event = GameCreated StreamId ClientId Color
-    | GameJoined StreamId ClientId
-    | YellowPlayed StreamId Column
-    | RedPlayed StreamId Column
-    | GameWon StreamId ClientId
-    | GameTied StreamId
+data Event = GameCreated StreamId UTCTime ClientId Color
+    | GameJoined StreamId UTCTime ClientId
+    | YellowPlayed StreamId UTCTime Column
+    | RedPlayed StreamId UTCTime Column
+    | GameWon StreamId UTCTime ClientId
+    | GameTied StreamId UTCTime
     deriving (Eq, Generic)
 
 instance ToJSON Event
@@ -28,15 +29,15 @@ instance Show Event where
 
 apply :: Event -> GameState -> GameState
 apply event game = case (event, game) of
-  (GameCreated _ player color, Uninitialized) -> AwaitOpponent player color
-  (GameJoined _ player1, AwaitOpponent player2 color) ->
+  (GameCreated _ _ player color, Uninitialized) -> AwaitOpponent player color
+  (GameJoined _ _ player1, AwaitOpponent player2 color) ->
     case color of
       Yellow -> YellowToPlay player1 player2 empty
       Red    -> YellowToPlay player2 player1 empty
-  (YellowPlayed _ column, YellowToPlay yellow red board) ->
+  (YellowPlayed _ _ column, YellowToPlay yellow red board) ->
     RedToPlay yellow red (play column board)
-  (RedPlayed _ column, RedToPlay yellow red board) ->
+  (RedPlayed _ _ column, RedToPlay yellow red board) ->
     YellowToPlay yellow red (play column board)
-  (GameWon _ _, _) -> GameOver
-  (GameTied _, _) -> GameOver
+  (GameWon _ _ _, _) -> GameOver
+  (GameTied _ _, _) -> GameOver
   _ -> game

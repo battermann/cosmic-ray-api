@@ -16,6 +16,7 @@ import           Connect4.Types
 import           Control.Monad.Except
 import qualified Data.ByteString.Char8         as C
 import qualified Data.ByteString.Lazy.Internal as BL
+import           Data.Time.Clock               (getCurrentTime)
 import           Data.UUID
 import qualified Data.UUID.V4                  as UUID
 import           EventSourcing.EventStore
@@ -75,17 +76,20 @@ server handler =
     newGame :: NewGame -> Handler Responses.GameCreated
     newGame req = do
       streamId <- liftIO $ StreamId <$> UUID.nextRandom
-      let cmd = Cmd.CreateNewGame (clientId (req :: NewGame)) (color (req :: NewGame))
+      time <- liftIO getCurrentTime
+      let cmd = Cmd.CreateNewGame (clientId (req :: NewGame)) time (color (req :: NewGame))
       Handler $ withExceptT toServerError $ handler streamId cmd
       return $ Responses.GameCreated streamId
     joinGame :: UUID -> JoinGame -> Handler NoContent
     joinGame uuid req = do
-      let cmd = Cmd.JoinGame (clientId (req :: JoinGame))
+      time <- liftIO getCurrentTime
+      let cmd = Cmd.JoinGame (clientId (req :: JoinGame)) time
       Handler $ withExceptT toServerError $ handler (StreamId uuid) cmd
       return NoContent
     play :: UUID -> Play -> Handler NoContent
     play uuid req = do
-      let cmd = Cmd.Play (clientId (req :: Play)) (column (req :: Play))
+      time <- liftIO getCurrentTime
+      let cmd = Cmd.Play (clientId (req :: Play)) time (column (req :: Play))
       Handler $ withExceptT toServerError $ handler (StreamId uuid) cmd
       return NoContent
 

@@ -49,6 +49,7 @@ library
                      , vector
                      , contravariant-extras
                      , text
+                     , time
   default-language:    Haskell2010
   other-modules:     Connect4.Commands
                      , Connect4.GameState
